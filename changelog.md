@@ -1,4 +1,4 @@
-# Changelog myWallBox plugin
+# Changelog WallBox plugin
 
 # 07/06/2025 (1.4)
 - Correction bug (Debian 12)

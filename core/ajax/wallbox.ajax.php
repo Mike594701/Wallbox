@@ -35,8 +35,8 @@ try {
     // Main du clic du bouton 'Synchronisation'
     if (init('action') == 'synchronize') {
         try {
-            $cr_sync=0; //mywallbox::synchronize(false);
-            log::add('mywallbox', 'debug', 'AJAX wallbox synchronize() CR=' . $cr_sync);
+            $cr_sync=0; //wallbox::synchronize(false);
+            log::add('wallbox', 'debug', 'AJAX wallbox synchronize() CR=' . $cr_sync);
             if (preg_match("/SUCCESS/i", $cr_sync)) {
                 ajax::success();
             } else {

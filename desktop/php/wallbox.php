@@ -12,7 +12,7 @@ function mkdir_recursive($path)
 }
 
 // Déclaration des variables obligatoires
-$plugin = plugin::byId('mywallbox');
+$plugin = plugin::byId('wallbox');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 $pluginInit = true;
@@ -21,10 +21,10 @@ $deamon_info = 0;
 // Plugin actif ?
 $pluginActif = $plugin->isActive();
 if ($pluginActif == 1) {
-  $username = config::byKey("username", "mywallbox");
-  $password = config::byKey("password", "mywallbox");
+  $username = config::byKey("username", "wallbox");
+  $password = config::byKey("password", "wallbox");
   if($username == null || $password == null){
-    echo '<p class="h5 danger" style="font-weight:bold;">{{Le nom d\'utilisateur et le mot de passe de votre compte myWallbox sont requis pour le plugin}}</p>';
+    echo '<p class="h5 danger" style="font-weight:bold;">{{Le nom d\'utilisateur et le mot de passe de votre compte wallbox sont requis pour le plugin}}</p>';
   }
 }
 else {
@@ -40,12 +40,12 @@ if(count($eqLogics) != 0) {
 
     // test si l'identification a fonctionné et que la liste des wallbox sont disponibles
     if(isset($liste_chargers['ERREUR'])) {
-      echo '<p class="h5 danger" style="font-weight:bold;">{{'. $liste_chargers['ERREUR'] .'}}, vérifier vos identifiants de connexion myWallbox</p>';
+      echo '<p class="h5 danger" style="font-weight:bold;">{{'. $liste_chargers['ERREUR'] .'}}, vérifier vos identifiants de connexion wallbox</p>';
       $liste_chargers = [];
     }    
   }
   else{
-    log::add('mywallbox', 'error', 'Le plugin n\'est pas configuré avec le nom d\'utilisateur et le mot de passe du compte MyWallbox.' );
+    log::add('wallbox', 'error', 'Le plugin n\'est pas configuré avec le nom d\'utilisateur et le mot de passe du compte wallbox.' );
     $liste_chargers = [];
   }
 }
@@ -62,7 +62,7 @@ else {
 }
 
 // Version du plugin
-$pluginVersion = mywallbox::GetVersionPlugin();
+$pluginVersion = wallbox::GetVersionPlugin();
 if ($pluginVersion !== 'introuvable') {
   $pluginVersion = 'v' . $pluginVersion;
 }
@@ -142,7 +142,7 @@ if ($pluginVersion !== 'introuvable') {
         <i class="fas fa-comments logoPrimary"></i>
         <br>
         <span>{{Community}}</span>
-        <span>myWallbox</span>
+        <span>wallbox</span>
       </div>   
     </div>
     
@@ -185,17 +185,17 @@ if ($pluginVersion !== 'introuvable') {
               // Telecharge l'image de la Wallbox depuis le site Wallbox
               $image_api = file_get_contents($chargeur['image']);
               
-              // Enregistrer l'image dans : mywallbox/core/images_wallbox/
+              // Enregistrer l'image dans : wallbox/core/images_wallbox/
               file_put_contents($fichierImgwallboxDir, $image_api);
               if ( ! file_exists($fichierImgwallboxDir)) {              
                 $fichierImgwallboxDir = $plugin->getPathImgIcon(); // image de la Wallbox introuvable
               }
               else {
-                $fichierImgwallboxDir = 'plugins/mywallbox/core/images_wallbox/' . basename($chargeur['image']);
+                $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);
               }
             }
             else {
-              $fichierImgwallboxDir = 'plugins/mywallbox/core/images_wallbox/' . basename($chargeur['image']);              
+              $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);              
             }
             echo '<img src="' . $fichierImgwallboxDir . '"/>';
           }
@@ -396,7 +396,7 @@ if(count($liste_chargers) > 0) {
                   <?php
                     foreach ($liste_chargers as $chargeur) {
                       if($chargeur['image'] != "undefined") {
-                        $fichierImgwallboxDir = 'plugins/mywallbox/core/images_wallbox/' . basename($chargeur['image']);              
+                        $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);              
                         echo '<img name="icon_visu" alt="'.$chargeur['id'].'" id="img-'.$chargeur['id'].'" src="'.$fichierImgwallboxDir.'" style="max-width:200px; display : none;" />';
                       }
                     }
