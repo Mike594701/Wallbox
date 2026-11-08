@@ -19,21 +19,21 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 // Fonction exécutée automatiquement à l'installation du plugin
-  function wallbox_install() {
-    log::add('wallbox', 'debug', 'wallbox_install() :: vide');
+  function monwallbox_install() {
+    log::add('monwallbox', 'debug', 'monwallbox_install() :: vide');
   }
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
-  function wallbox_update() {
-    log::add('wallbox', 'debug', 'wallbox_update()');
+  function monwallbox_update() {
+    log::add('monwallbox', 'debug', 'monwallbox_update()');
 
     // Mise à jour du numero de version du plugin dans la base Jeedom
-    $pluginVersion = wallbox::SetVersionPlugin(); 
+    $pluginVersion = monwallbox::SetVersionPlugin(); 
   }
 
 // Fonction exécutée automatiquement après la suppression du plugin
-  function wallbox_remove() {
-    log::add('wallbox', 'debug', 'wallbox_remove() :: vide');
+  function monwallbox_remove() {
+    log::add('monwallbox', 'debug', 'monwallbox_remove() :: vide');
   }
 
 ?>

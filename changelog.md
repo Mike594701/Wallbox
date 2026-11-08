@@ -1,4 +1,4 @@
-# Changelog WallBox plugin
+# Changelog monmonwallbox plugin
 
 # 07/06/2025 (1.4)
 - Correction bug (Debian 12)
@@ -8,7 +8,7 @@
 
 # 17/03/2024 (1.2)
 - Ajout du lien Community dans la page de configuration des équipements
-- Télécharge les images des wallbox car sur certaines version de Jeedom le 'Content Security Policy' bloque l'accès à l'API
+- Télécharge les images des monmonwallbox car sur certaines version de Jeedom le 'Content Security Policy' bloque l'accès à l'API
 - Refresh le widget après une commande
 
 # 25/08/2023 (1.1)

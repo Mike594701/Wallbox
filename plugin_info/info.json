@@ -1,9 +1,9 @@
 {
-	"id" : "wallbox",
-	"name" : "wallbox",
+	"id" : "monwallbox",
+	"name" : "monwallbox",
 	"pluginVersion": "1.4",  
 	"description" : {
-		"fr_FR": "Plugin pour la récupération des données d'une station de recharge WallBox."
+		"fr_FR": "Plugin pour la récupération des données d'une station de recharge monwallbox."
 	},
 	"licence" : "GNU",
 	"author" : "Ozaer Michael",
@@ -13,11 +13,11 @@
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 0,
 	"link" : {
-		"forum": "https://community.jeedom.com/tag/plugin-wallbox",
+		"forum": "https://community.jeedom.com/tag/plugin-monwallbox",
 		"mon Jeddom": "https://community.jeedom.com/t/presentation-cstan77/72426"
 	},
 	"language" : ["fr_FR"],
 	"compatibility" : ["jeedomboard","miniplus","smart","rpi","docker","diy","v4","atlas"],
-	"changelog" : "https://github.com/CStan77/jeedom_doc/blob/main/wallbox/changelog.md",
-	"documentation" : "https://github.com/CStan77/jeedom_doc/blob/main/wallbox/readme.md"
+	"changelog" : "https://github.com/CStan77/jeedom_doc/blob/main/monwallbox/changelog.md",
+	"documentation" : "https://github.com/CStan77/jeedom_doc/blob/main/monwallbox/readme.md"
 }

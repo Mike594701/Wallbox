@@ -12,7 +12,7 @@ function mkdir_recursive($path)
 }
 
 // Déclaration des variables obligatoires
-$plugin = plugin::byId('wallbox');
+$plugin = plugin::byId('monwallbox');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 $pluginInit = true;
@@ -21,31 +21,31 @@ $deamon_info = 0;
 // Plugin actif ?
 $pluginActif = $plugin->isActive();
 if ($pluginActif == 1) {
-  $username = config::byKey("username", "wallbox");
-  $password = config::byKey("password", "wallbox");
+  $username = config::byKey("username", "monwallbox");
+  $password = config::byKey("password", "monwallbox");
   if($username == null || $password == null){
-    echo '<p class="h5 danger" style="font-weight:bold;">{{Le nom d\'utilisateur et le mot de passe de votre compte wallbox sont requis pour le plugin}}</p>';
+    echo '<p class="h5 danger" style="font-weight:bold;">{{Le nom d\'utilisateur et le mot de passe de votre compte monwallbox sont requis pour le plugin}}</p>';
   }
 }
 else {
   echo '<p class="h5 danger" style="font-weight:bold;">{{Le plugin n\'est pas activé.}}</p>';
 }
 
-// Liste des équipements wallbox du plugin
+// Liste des équipements monwallbox du plugin
 if(count($eqLogics) != 0) {
   $pluginInit = false;
 	if($username != null || $password != null){
     $liste_chargers = $eqLogics[0]->getChargerList();
     $deamon_info = $eqLogics[0]->getIsEnable();
 
-    // test si l'identification a fonctionné et que la liste des wallbox sont disponibles
+    // test si l'identification a fonctionné et que la liste des monwallbox sont disponibles
     if(isset($liste_chargers['ERREUR'])) {
-      echo '<p class="h5 danger" style="font-weight:bold;">{{'. $liste_chargers['ERREUR'] .'}}, vérifier vos identifiants de connexion wallbox</p>';
+      echo '<p class="h5 danger" style="font-weight:bold;">{{'. $liste_chargers['ERREUR'] .'}}, vérifier vos identifiants de connexion monwallbox</p>';
       $liste_chargers = [];
     }    
   }
   else{
-    log::add('wallbox', 'error', 'Le plugin n\'est pas configuré avec le nom d\'utilisateur et le mot de passe du compte wallbox.' );
+    log::add('monwallbox', 'error', 'Le plugin n\'est pas configuré avec le nom d\'utilisateur et le mot de passe du compte monwallbox.' );
     $liste_chargers = [];
   }
 }
@@ -62,7 +62,7 @@ else {
 }
 
 // Version du plugin
-$pluginVersion = wallbox::GetVersionPlugin();
+$pluginVersion = monwallbox::GetVersionPlugin();
 if ($pluginVersion !== 'introuvable') {
   $pluginVersion = 'v' . $pluginVersion;
 }
@@ -79,7 +79,7 @@ if ($pluginVersion !== 'introuvable') {
 </style>
 
 <script type="text/javascript">
-	// Evenenemnt lors de la selection de la borne, on charge la photo correspondante à la wallbox
+	// Evenenemnt lors de la selection de la borne, on charge la photo correspondante à la monwallbox
 	$(function() {
 		$('#chargerselect').change(function(){
 			$("img[id^='img-']").hide();
@@ -116,7 +116,7 @@ if ($pluginVersion !== 'introuvable') {
       <div class="cursor eqLogicAction logoPrimary" data-action="add">
         <i class="fas fa-plus-circle"></i>
         <br>
-        <span>{{Ajouter Wallbox}}</span>
+        <span>{{Ajouter monwallbox}}</span>
       </div>
       <?php 
         }
@@ -142,11 +142,11 @@ if ($pluginVersion !== 'introuvable') {
         <i class="fas fa-comments logoPrimary"></i>
         <br>
         <span>{{Community}}</span>
-        <span>wallbox</span>
+        <span>monwallbox</span>
       </div>   
     </div>
     
-    <legend><i class="fas fa-table"></i> {{Mes équipements Wallbox}}</legend>
+    <legend><i class="fas fa-table"></i> {{Mes équipements monwallbox}}</legend>
     <!-- Champ de recherche -->
     <!--
     <div class="input-group" style="margin:5px;">
@@ -162,45 +162,45 @@ if ($pluginVersion !== 'introuvable') {
       // print_r($liste_chargers);
       if(count($liste_chargers) > 0) {
         foreach ($eqLogics as $eqLogic) {
-          $imgWallBox = '';
+          $imgmonwallbox = '';
           $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
           echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
           foreach ($liste_chargers as $chargeur) {
             if($eqLogic->getConfiguration('chargerid') == $chargeur['id']) {
               if ($chargeur['image'] != '') {
-                $imgWallBox = $chargeur['image'];
+                $imgmonwallbox = $chargeur['image'];
               }
               break;
             }
           }
-          if($imgWallBox) {
+          if($imgmonwallbox) {
             // Telecharge l'image car la "Content Security Policy" de Jeedom bloque sur certaine version
-            // Création du répertoire de stockage pour les images Wallbox
-            $imgwallboxDir = dirname(__FILE__) . '/../../core/images_wallbox';
-            mkdir_recursive($imgwallboxDir);
+            // Création du répertoire de stockage pour les images monwallbox
+            $imgmonwallboxDir = dirname(__FILE__) . '/../../core/images_monwallbox';
+            mkdir_recursive($imgmonwallboxDir);
             
-            $fichierImgwallboxDir = $imgwallboxDir . '/' . basename($chargeur['image']);
+            $fichierImgmonwallboxDir = $imgmonwallboxDir . '/' . basename($chargeur['image']);
             
-            if ( ! file_exists($fichierImgwallboxDir)) {
-              // Telecharge l'image de la Wallbox depuis le site Wallbox
+            if ( ! file_exists($fichierImgmonwallboxDir)) {
+              // Telecharge l'image de la monwallbox depuis le site monwallbox
               $image_api = file_get_contents($chargeur['image']);
               
-              // Enregistrer l'image dans : wallbox/core/images_wallbox/
-              file_put_contents($fichierImgwallboxDir, $image_api);
-              if ( ! file_exists($fichierImgwallboxDir)) {              
-                $fichierImgwallboxDir = $plugin->getPathImgIcon(); // image de la Wallbox introuvable
+              // Enregistrer l'image dans : monwallbox/core/images_monwallbox/
+              file_put_contents($fichierImgmonwallboxDir, $image_api);
+              if ( ! file_exists($fichierImgmonwallboxDir)) {              
+                $fichierImgmonwallboxDir = $plugin->getPathImgIcon(); // image de la monwallbox introuvable
               }
               else {
-                $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);
+                $fichierImgmonwallboxDir = 'plugins/monwallbox/core/images_monwallbox/' . basename($chargeur['image']);
               }
             }
             else {
-              $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);              
+              $fichierImgmonwallboxDir = 'plugins/monwallbox/core/images_monwallbox/' . basename($chargeur['image']);              
             }
-            echo '<img src="' . $fichierImgwallboxDir . '"/>';
+            echo '<img src="' . $fichierImgmonwallboxDir . '"/>';
           }
           else {
-            echo '<img src="' . $plugin->getPathImgIcon() . '"/>'; // image de la Wallbox introuvable
+            echo '<img src="' . $plugin->getPathImgIcon() . '"/>'; // image de la monwallbox introuvable
           }
           echo '<br>';
           echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
@@ -208,7 +208,7 @@ if ($pluginVersion !== 'introuvable') {
         }
       }
       elseif (($pluginActif == 1) && ($username != null) && ($password != null) && ((count($liste_chargers) > 0) || ($pluginInit))){
-        echo '<p class="h5 logoPrimary" style="font-weight:bold; padding-left:20px;">{{Ajouter une Wallbox pour utiliser le plugin}}</p>';        
+        echo '<p class="h5 logoPrimary" style="font-weight:bold; padding-left:20px;">{{Ajouter une monwallbox pour utiliser le plugin}}</p>';        
       }
       ?>
     </div>
@@ -333,7 +333,7 @@ if(count($liste_chargers) > 0) {
               <legend><i class="fas fa-tablet-alt"></i> {{Template de Widget}}</legend>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Activer}}
-                <sup><i class="fas fa-question-circle tooltips" title="{{Cocher la case pour utiliser le template du widget représentant la Wallbox}}"></i></sup>
+                <sup><i class="fas fa-question-circle tooltips" title="{{Cocher la case pour utiliser le template du widget représentant la monwallbox}}"></i></sup>
                 </label>
                 <div class="col-sm-2">
                   <input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="widgetTemplate">
@@ -347,26 +347,26 @@ if(count($liste_chargers) > 0) {
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Modèle}}</label>
                 <div class="col-sm-2">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="chargertype"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="chargertype"></span>
                 </div>
                 <label class="col-sm-3 control-label">{{N° série}}</label>
                 <div class="col-sm-2">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="chargerid"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="chargerid"></span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Référence}}</label>
                 <div class="col-sm-7">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="part_number"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="part_number"></span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Version}}</label>
                 <div class="col-sm-7">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="software_currentVersion"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="software_currentVersion"></span>
                   <span id="software_disponible" class="hidden">
                     <label class="control-label txt-color-goldenrod" style="margin-left: 20px;"><i class="fas fa-upload"></i> {{Version disponible}}</label> 
-                    <span class="wallbox label label-info" data-l1key="configuration" data-l2key="software_latestVersion"></span>
+                    <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="software_latestVersion"></span>
                     <sup><i class="fas fa-question-circle tooltips" title="{{Utiliser l'application du constructeur pour faire la mise à jour}}"></i></sup>
                   </span>
                 </div>
@@ -374,19 +374,19 @@ if(count($liste_chargers) > 0) {
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Date installation}}</label>
                 <div class="col-sm-7">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="createtime"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="createtime"></span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Signal WiFi}}</label>
                 <div class="col-sm-7">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="signalwifi"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="signalwifi"></span>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-3 control-label">{{Dernière communication}}</label>
                 <div class="col-sm-7">
-                  <span class="wallbox label label-info" data-l1key="configuration" data-l2key="lastCommunication"></span>
+                  <span class="monwallbox label label-info" data-l1key="configuration" data-l2key="lastCommunication"></span>
                 </div>
               </div>
               <div class="form-group">
@@ -396,8 +396,8 @@ if(count($liste_chargers) > 0) {
                   <?php
                     foreach ($liste_chargers as $chargeur) {
                       if($chargeur['image'] != "undefined") {
-                        $fichierImgwallboxDir = 'plugins/wallbox/core/images_wallbox/' . basename($chargeur['image']);              
-                        echo '<img name="icon_visu" alt="'.$chargeur['id'].'" id="img-'.$chargeur['id'].'" src="'.$fichierImgwallboxDir.'" style="max-width:200px; display : none;" />';
+                        $fichierImgmonwallboxDir = 'plugins/monwallbox/core/images_monwallbox/' . basename($chargeur['image']);              
+                        echo '<img name="icon_visu" alt="'.$chargeur['id'].'" id="img-'.$chargeur['id'].'" src="'.$fichierImgmonwallboxDir.'" style="max-width:200px; display : none;" />';
                       }
                     }
                   ?>

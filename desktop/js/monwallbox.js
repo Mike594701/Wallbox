@@ -32,19 +32,19 @@ function printEqLogic(_eqLogic) {
   // console.table(_eqLogic); 
   // Lors de l'ajout de la borne, les informations ne sont pas encore disponible
   if (typeof _eqLogic.configuration.chargerid != "undefined") {
-    $('.wallbox[data-l1key=configuration][data-l2key=chargerid]').value(_eqLogic.configuration.chargerid);
-    $('.wallbox[data-l1key=configuration][data-l2key=chargertype]').value(_eqLogic.configuration.chargertype);
-    $('.wallbox[data-l1key=configuration][data-l2key=part_number]').value(_eqLogic.configuration.part_number);
-    $('.wallbox[data-l1key=configuration][data-l2key=software_currentVersion]').value(_eqLogic.configuration.software_currentVersion);
-    $('.wallbox[data-l1key=configuration][data-l2key=software_latestVersion]').value(_eqLogic.configuration.software_latestVersion);
-    $('.wallbox[data-l1key=configuration][data-l2key=createtime]').value(_eqLogic.configuration.createtime);
-    $('.wallbox[data-l1key=configuration][data-l2key=lastCommunication]').value(_eqLogic.status.lastCommunication);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=chargerid]').value(_eqLogic.configuration.chargerid);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=chargertype]').value(_eqLogic.configuration.chargertype);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=part_number]').value(_eqLogic.configuration.part_number);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=software_currentVersion]').value(_eqLogic.configuration.software_currentVersion);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=software_latestVersion]').value(_eqLogic.configuration.software_latestVersion);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=createtime]').value(_eqLogic.configuration.createtime);
+    $('.monmonwallbox[data-l1key=configuration][data-l2key=lastCommunication]').value(_eqLogic.status.lastCommunication);
     
     // Affiche les infos des commandes de la borne
     _eqLogic.cmd.forEach(function (arrayCmd) {
       // Affiche la puissance du signal wifi
       if(arrayCmd.logicalId == 'signalwifi') {
-        $('.wallbox[data-l1key=configuration][data-l2key=signalwifi]').value(arrayCmd.state + arrayCmd.unite);
+        $('.monmonwallbox[data-l1key=configuration][data-l2key=signalwifi]').value(arrayCmd.state + arrayCmd.unite);
       }
     });
     

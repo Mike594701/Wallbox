@@ -21,9 +21,9 @@ if (!isConnect()) {
   include_file('desktop', '404', 'php');
   die();
 }
-$username = config::byKey("username", "wallbox");
-$password = config::byKey("password", "wallbox");
-$pluginVersion = wallbox::GetVersionPlugin();
+$username = config::byKey("username", "monwallbox");
+$password = config::byKey("password", "monwallbox");
+$pluginVersion = monwallbox::GetVersionPlugin();
 if($username == null || $password == null){
   ?>
   <p style="color:red;text-align: center;font-weight: bold;">{{Le nom d'utilisateur et le mot de passe sont requis pour le plugin.}}</p>
@@ -31,7 +31,7 @@ if($username == null || $password == null){
 } ?>
 <form class="form-horizontal">
   <fieldset>
-    <legend><i class="fas fa-key"></i>{{Identifiant du compte wallbox :}}</legend>
+    <legend><i class="fas fa-key"></i>{{Identifiant du compte monwallbox :}}</legend>
     <div class="form-group">
       <label class="col-sm-3 control-label">{{Nom d'utilisateur}}</label>
       <div class="col-sm-7">

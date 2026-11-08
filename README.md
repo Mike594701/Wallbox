@@ -1,16 +1,16 @@
-# WallBox plugin pour jeedom
+# monwallbox plugin pour jeedom
 
-Plugin pour la récupération des données d'une station de recharge WallBox.
+Plugin pour la récupération des données d'une station de recharge monwallbox.
 
 ## Utilisation
 - Installer le plugin via [market Jeedom](https://community.jeedom.com/t/presentation-cstan77/72426)
-- Entrez dans la section configuration du plugin et saisissez vos identifiants WallBox de votre application
+- Entrez dans la section configuration du plugin et saisissez vos identifiants monwallbox de votre application
 - Dans la section Gestion du plugin, ajouter un équipement 
-- Selectionnez votre Wallbox dans la liste déroulante et configurez la
+- Selectionnez votre monwallbox dans la liste déroulante et configurez la
 
 ## Support
 
 Si vous rencontrez des problèmes, contactez moi via la [community Jeedom](https://community.jeedom.com/t/presentation-cstan77/72426)
-ou sur la page [Jeedom du plugin](https://community.jeedom.com/tag/plugin-WallBox)
+ou sur la page [Jeedom du plugin](https://community.jeedom.com/tag/plugin-monwallbox)
 
 MERCI :)

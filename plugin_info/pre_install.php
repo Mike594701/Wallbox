@@ -19,8 +19,8 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 // Fonction exécutée automatiquement avant la mise à jour du plugin
-  function wallbox_pre_update() {
-    log::add('wallbox', 'debug', 'wallbox_pre_update() :: vide');
+  function monwallbox_pre_update() {
+    log::add('monwallbox', 'debug', 'monwallbox_pre_update() :: vide');
   }
   
 ?>

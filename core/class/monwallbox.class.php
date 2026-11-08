@@ -18,11 +18,11 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
-class wallbox extends eqLogic {
+class monwallbox extends eqLogic {
   /*     * *************************Attributs****************************** */
   const DEFAULT_SYNC_CRON = '*/5 * * * *';
   const URL = 'https://api.wall-box.com';
-  const FICHIER_LOG = 'wallbox';
+  const FICHIER_LOG = 'monwallbox';
    
   /*
   * Permet de définir les possibilités de personnalisation du widget (en cas d'utilisation de la fonction 'toHtml' par exemple)
@@ -34,7 +34,7 @@ class wallbox extends eqLogic {
    
   // Fonction exécutée automatiquement toutes les minutes par Jeedom
   public static function cron() {
-		$eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('wallbox', true);
+		$eqLogics = ($_eqlogic_id !== null) ? array(eqLogic::byId($_eqlogic_id)) : eqLogic::byType('monwallbox', true);
 		foreach ($eqLogics as $eqlogic) {
       if($eqlogic->getIsEnable() == 0) {
         continue;
@@ -44,16 +44,16 @@ class wallbox extends eqLogic {
         try {
           $cron = new Cron\CronExpression(checkAndFixCron($autorefresh), new Cron\FieldFactory);
           if($cron->isDue()) {
-            $username = config::byKey("username", "wallbox");
-            $password = config::byKey("password", "wallbox");
+            $username = config::byKey("username", "monwallbox");
+            $password = config::byKey("password", "monwallbox");
             if($username == null || $password == null){
-              throw new Exception("Vous devez configurer le nom d'utilisateur et le mot de passe de votre compte wallbox pour pouvoir utiliser ce plugin");
+              throw new Exception("Vous devez configurer le nom d'utilisateur et le mot de passe de votre compte monwallbox pour pouvoir utiliser ce plugin");
             }
-            foreach (self::byType('wallbox') as $wallbox) {   // boucle sur tous les équipements du plugin
-              if ($wallbox->getIsEnable() == 1) {               // vérifie que l'équipement est actif
-                $refresh = $wallbox->getCmd(null, 'refresh');   // on le met à jour
+            foreach (self::byType('monwallbox') as $monwallbox) {   // boucle sur tous les équipements du plugin
+              if ($monwallbox->getIsEnable() == 1) {               // vérifie que l'équipement est actif
+                $refresh = $monwallbox->getCmd(null, 'refresh');   // on le met à jour
                 if(is_object($refresh)) {
-                  log::add('wallbox', 'info', 'CRON - Equipement ' . $eqlogic->getId() . ' : ' . $eqlogic->getName() . ' | autorefresh = '.$autorefresh);
+                  log::add('monwallbox', 'info', 'CRON - Equipement ' . $eqlogic->getId() . ' : ' . $eqlogic->getName() . ' | autorefresh = '.$autorefresh);
                   $refresh->execCmd();
                 }
               }
@@ -61,11 +61,11 @@ class wallbox extends eqLogic {
           }
         } 
         catch (Exception $exc) {
-          log::add('wallbox', 'error', __('Rafraichissement impossible ', __FILE__) . $eqlogic->getHumanName() . ' : ' . $autorefresh);
+          log::add('monwallbox', 'error', __('Rafraichissement impossible ', __FILE__) . $eqlogic->getHumanName() . ' : ' . $autorefresh);
         }
       }
       else {
-        log::add('wallbox', 'error', __('Expression cron vide!', __FILE__) . $eqlogic->getHumanName());        
+        log::add('monwallbox', 'error', __('Expression cron vide!', __FILE__) . $eqlogic->getHumanName());        
       }
 		} 
   }
@@ -112,13 +112,13 @@ class wallbox extends eqLogic {
   public static function GetVersionPlugin()
   {
     // Lecture de la version dans la configuration du plugin (BD Jeedom)
-    $pluginVersion = config::byKey("pluginVersion", "wallbox");
+    $pluginVersion = config::byKey("pluginVersion", "monwallbox");
     
     if ($pluginVersion) {  
-      log::add('wallbox', 'info', '[VERSION] GetVersionPlugin :: ' . $pluginVersion);    
+      log::add('monwallbox', 'info', '[VERSION] GetVersionPlugin :: ' . $pluginVersion);    
     }
     else {
-      log::add('wallbox', 'warning', '[VERSION] Impossible de récupérer la version du plugin');
+      log::add('monwallbox', 'warning', '[VERSION] Impossible de récupérer la version du plugin');
       $pluginVersion = 'introuvable';
     }
 
@@ -134,25 +134,25 @@ class wallbox extends eqLogic {
     $pluginVersion = 'introuvable';
     try {
       if (!file_exists(dirname(__FILE__) . '/../../plugin_info/info.json')) {
-        log::add('wallbox', 'warning', '[VERSION] fichier info.json manquant');
+        log::add('monwallbox', 'warning', '[VERSION] fichier info.json manquant');
       }
       $data = json_decode(file_get_contents(dirname(__FILE__) . '/../../plugin_info/info.json'), true);
       if (!is_array($data)) {
-        log::add('wallbox', 'warning', '[VERSION] Impossible de décoder le fichier \'info.json\'');
+        log::add('monwallbox', 'warning', '[VERSION] Impossible de décoder le fichier \'info.json\'');
       }
       try {
         $pluginVersion = $data['pluginVersion'];
         // Enregistrement de la version dans la configuration du plugin (BD Jeedom)
-        config::save('pluginVersion', $pluginVersion, 'wallbox');
+        config::save('pluginVersion', $pluginVersion, 'monwallbox');
       }
       catch (\Exception $e) {
-        log::add('wallbox', 'warning', '[VERSION] Impossible de mettre à jour la version du plugin :: ' . $e->getMessage());
+        log::add('monwallbox', 'warning', '[VERSION] Impossible de mettre à jour la version du plugin :: ' . $e->getMessage());
       }
     }
     catch (\Exception $e) {
-      log::add('wallbox', 'warning', '[VERSION] SetVersionPlugin ERROR :: ' . $e->getMessage());
+      log::add('monwallbox', 'warning', '[VERSION] SetVersionPlugin ERROR :: ' . $e->getMessage());
     }
-    log::add('wallbox', 'info', '[VERSION] SetVersionPlugin :: ' . $pluginVersion);    
+    log::add('monwallbox', 'info', '[VERSION] SetVersionPlugin :: ' . $pluginVersion);    
 
     return $pluginVersion;
   }    
@@ -161,10 +161,10 @@ class wallbox extends eqLogic {
 
   // Fonction exécutée automatiquement avant la création de l'équipement 
   public function preInsert() {
-    $username = config::byKey("username", "wallbox");
-    $password = config::byKey("password", "wallbox");
+    $username = config::byKey("username", "monwallbox");
+    $password = config::byKey("password", "monwallbox");
     if($username == null || $password == null){
-      throw new Exception("Vous devez configurer le nom d'utilisateur et le mot de passe de votre compte wallbox pour pouvoir utiliser ce plugin");
+      throw new Exception("Vous devez configurer le nom d'utilisateur et le mot de passe de votre compte monwallbox pour pouvoir utiliser ce plugin");
     }
 
     // Define auto refresh
@@ -173,31 +173,31 @@ class wallbox extends eqLogic {
 
   // Fonction exécutée automatiquement après la création de l'équipement 
   public function postInsert() {
-    log::add('wallbox', 'debug', '******* postInsert() *******'); 
+    log::add('monwallbox', 'debug', '******* postInsert() *******'); 
   }
 
   // Fonction exécutée automatiquement avant la mise à jour de l'équipement 
   public function preUpdate() {
-    log::add('wallbox', 'debug', '******* preUpdate() *******'); 
+    log::add('monwallbox', 'debug', '******* preUpdate() *******'); 
   }
  
   // Fonction exécutée automatiquement après la mise à jour de l'équipement 
   public function postUpdate() {
-    log::add('wallbox', 'debug', '******* postUpdate() *******'); 
+    log::add('monwallbox', 'debug', '******* postUpdate() *******'); 
   }
  
   // Fonction exécutée automatiquement avant la sauvegarde (création ou mise à jour) de l'équipement 
   public function preSave() {
-    log::add('wallbox', 'debug', '******* preSave() *******');    
+    log::add('monwallbox', 'debug', '******* preSave() *******');    
   }
  
   // Fonction exécutée automatiquement après la sauvegarde (création ou mise à jour) des commandes de l'équipement 
   public function postSave() {
-    log::add('wallbox', 'debug', '******* postSave() DEBUT *******');
-    log::add('wallbox', 'debug', print_r($this, true));  
+    log::add('monwallbox', 'debug', '******* postSave() DEBUT *******');
+    log::add('monwallbox', 'debug', print_r($this, true));  
 
     if($this->getConfiguration('chargerid') == ''){
-      log::add('wallbox', 'debug', 'postSave chargerid (null)');       
+      log::add('monwallbox', 'debug', 'postSave chargerid (null)');       
     }
     else {
       $new_eqLogical = false;
@@ -206,9 +206,9 @@ class wallbox extends eqLogic {
       $i = 1;
       $refresh = $this->getCmd(null, 'refresh');
       if(!is_object($refresh)) {
-        log::add('wallbox', 'info', 'Création  des commandes...');
+        log::add('monwallbox', 'info', 'Création  des commandes...');
         $new_eqLogical = true;
-        $refresh = (new wallboxCmd)
+        $refresh = (new monwallboxCmd)
         ->setName(__('Rafraîchir', __FILE__))
         ->setLogicalId('refresh')
         ->setOrder($i)
@@ -233,7 +233,7 @@ class wallbox extends eqLogic {
       $i++;
       $name = $this->getCmd(null, 'name');
       if(!is_object($name)) {
-        $name = (new wallboxCmd)
+        $name = (new monwallboxCmd)
         ->setName(__('Nom', __FILE__))
         ->setLogicalId('name')
         ->setOrder($i)
@@ -259,7 +259,7 @@ class wallbox extends eqLogic {
       $i++;
       $lastsync = $this->getCmd(null, 'lastsync');
       if(!is_object($lastsync)) {
-        $lastsync = (new wallboxCmd)
+        $lastsync = (new monwallboxCmd)
         ->setName(__('Dernière synchronisation', __FILE__))
         ->setLogicalId('lastsync')
         ->setOrder($i)
@@ -285,7 +285,7 @@ class wallbox extends eqLogic {
       $i++;
       $chargecontrol = $this->getCmd(null, 'chargecontrol');
       if(!is_object($chargecontrol)) {
-        $chargecontrol = (new wallboxCmd)
+        $chargecontrol = (new monwallboxCmd)
         ->setName(__('Contrôle de la charge', __FILE__))
         ->setLogicalId('chargecontrol')
         ->setOrder($i)
@@ -309,7 +309,7 @@ class wallbox extends eqLogic {
       $i++;
       $lockcontrol = $this->getCmd(null, 'lockcontrol');
       if(!is_object($lockcontrol)) {
-        $lockcontrol = (new wallboxCmd)
+        $lockcontrol = (new monwallboxCmd)
         ->setName(__('Verrouillage  Déverrouillage du chargeur', __FILE__))
         ->setLogicalId('lockcontrol')
         ->setOrder($i)
@@ -333,7 +333,7 @@ class wallbox extends eqLogic {
       $i++;
       $lockcontrolid = $this->getCmd(null, 'lockcontrolid');
       if(!is_object($lockcontrolid)) {
-        $lockcontrolid = (new wallboxCmd)
+        $lockcontrolid = (new monwallboxCmd)
         ->setName(__('Accès borne', __FILE__))
         ->setLogicalId('lockcontrolid')
         ->setOrder($i)
@@ -358,7 +358,7 @@ class wallbox extends eqLogic {
       $i++;
       $status = $this->getCmd(null, 'status');
       if(!is_object($status)) {
-        $status = (new wallboxCmd)
+        $status = (new monwallboxCmd)
         ->setName(__('État', __FILE__))
         ->setLogicalId('status')
         ->setOrder($i)
@@ -385,7 +385,7 @@ class wallbox extends eqLogic {
       $i++;
       $statusid = $this->getCmd(null, 'statusid');
       if(!is_object($statusid)) {
-        $statusid = (new wallboxCmd)
+        $statusid = (new monwallboxCmd)
         ->setName(__('Statut ID', __FILE__))
         ->setLogicalId('statusid')
         ->setOrder($i)
@@ -410,7 +410,7 @@ class wallbox extends eqLogic {
       $i++;      
       $energyconsumed = $this->getCmd(null, 'energyconsumed');
       if(!is_object($energyconsumed)) {
-        $energyconsumed = (new wallboxCmd)
+        $energyconsumed = (new monwallboxCmd)
         ->setName(__('Énergie consommée', __FILE__))
         ->setLogicalId('energyconsumed')
         ->setOrder($i)
@@ -439,7 +439,7 @@ class wallbox extends eqLogic {
       $i++;
       $power = $this->getCmd(null, 'power');
       if(!is_object($power)) {
-        $power = (new wallboxCmd)
+        $power = (new monwallboxCmd)
         ->setName(__('Puissance', __FILE__))
         ->setLogicalId('power')
         ->setOrder($i)
@@ -469,7 +469,7 @@ class wallbox extends eqLogic {
       $i++;
       $valmaxpower = $this->getCmd(null, 'valmaxpower');
       if(!is_object($valmaxpower)) {
-        $valmaxpower = (new wallboxCmd)
+        $valmaxpower = (new monwallboxCmd)
         ->setName(__('Valeur puissance maximum', __FILE__))
         ->setLogicalId('valmaxpower')
         ->setOrder($i)
@@ -494,7 +494,7 @@ class wallbox extends eqLogic {
       $i++;
       $maxpower = $this->getCmd(null, 'maxpower');
       if(!is_object($maxpower)) {
-        $maxpower = (new wallboxCmd)
+        $maxpower = (new monwallboxCmd)
         ->setName(__('Puissance maximum', __FILE__))
         ->setLogicalId('maxpower')
         ->setOrder($i)
@@ -529,7 +529,7 @@ class wallbox extends eqLogic {
       $i++;
       $chargingtime = $this->getCmd(null, 'chargingtime');
       if(!is_object($chargingtime)) {
-        $chargingtime = (new wallboxCmd)
+        $chargingtime = (new monwallboxCmd)
         ->setName(__('Temps de charge', __FILE__))
         ->setLogicalId('chargingtime')
         ->setOrder($i)
@@ -557,7 +557,7 @@ class wallbox extends eqLogic {
       $i++;
       $energypricetotal = $this->getCmd(null, 'energypricetotal');
       if(!is_object($energypricetotal)) {
-        $energypricetotal = (new wallboxCmd)
+        $energypricetotal = (new monwallboxCmd)
         ->setName(__('Coût énergétique', __FILE__))
         ->setLogicalId('energypricetotal')
         ->setOrder($i)
@@ -584,7 +584,7 @@ class wallbox extends eqLogic {
       $i++;
       $signalwifi = $this->getCmd(null, 'signalwifi');
       if(!is_object($signalwifi)) {
-        $signalwifi = (new wallboxCmd)
+        $signalwifi = (new monwallboxCmd)
         ->setName(__('Signal WiFi', __FILE__))
         ->setLogicalId('signalwifi')
         ->setOrder($i)
@@ -611,7 +611,7 @@ class wallbox extends eqLogic {
       $i++;
       $totalsessions = $this->getCmd(null, 'totalsessions');
       if(!is_object($totalsessions)) {
-        $totalsessions = (new wallboxCmd)
+        $totalsessions = (new monwallboxCmd)
         ->setName(__('Sessions de charge', __FILE__))
         ->setLogicalId('totalsessions')
         ->setOrder($i)
@@ -639,7 +639,7 @@ class wallbox extends eqLogic {
       $i++;
       $totalpuissance = $this->getCmd(null, 'totalpuissance');
       if(!is_object($totalpuissance)) {
-        $totalpuissance = (new wallboxCmd)
+        $totalpuissance = (new monwallboxCmd)
         ->setName(__('Énergie consommée totale', __FILE__))
         ->setLogicalId('totalpuissance')
         ->setOrder($i)
@@ -665,7 +665,7 @@ class wallbox extends eqLogic {
       $i++;
       $totalchargingTime = $this->getCmd(null, 'totalchargingTime');
       if(!is_object($totalchargingTime)) {
-        $totalchargingTime = (new wallboxCmd)
+        $totalchargingTime = (new monwallboxCmd)
         ->setName(__('Temps de charge total', __FILE__))
         ->setLogicalId('totalchargingTime')
         ->setOrder($i)
@@ -690,7 +690,7 @@ class wallbox extends eqLogic {
       $i++;
       $totalcout = $this->getCmd(null, 'totalcout');
       if(!is_object($totalcout)) {
-        $totalcout = (new wallboxCmd)
+        $totalcout = (new monwallboxCmd)
         ->setName(__('Coût énergétique total', __FILE__))
         ->setLogicalId('totalcout')
         ->setOrder($i)
@@ -712,9 +712,9 @@ class wallbox extends eqLogic {
         $totalcout->save();
       }
 
-      // Si c'est une nouvelle wallbox on fait un refresh pour avoir toutes ses infos
+      // Si c'est une nouvelle monwallbox on fait un refresh pour avoir toutes ses infos
       if ($new_eqLogical) {
-        log::add('wallbox', 'info', 'Récupération des informations de la Wallbox : ' . $this->getName() . ' (id:' . $this->getId() . ')');
+        log::add('monwallbox', 'info', 'Récupération des informations de la monwallbox : ' . $this->getName() . ' (id:' . $this->getId() . ')');
         $refresh = $this->getCmd(null, 'refresh');
         if(is_object($refresh)) {
           $refresh->execCmd();   
@@ -725,7 +725,7 @@ class wallbox extends eqLogic {
       $i++;
       $tokenHS = $this->getCmd(null, 'tokenhs');
       if(!is_object($tokenHS)) {
-        $tokenHS = (new wallboxCmd)
+        $tokenHS = (new monwallboxCmd)
         ->setName(__('Nombre erreur token', __FILE__))
         ->setLogicalId('tokenhs')
         ->setOrder($i)
@@ -746,26 +746,26 @@ class wallbox extends eqLogic {
         $tokenHS->save();
       }      
     }    
-    log::add('wallbox', 'debug', '******* postSave() FIN *******');      
+    log::add('monwallbox', 'debug', '******* postSave() FIN *******');      
   }
  
   // Fonction exécutée automatiquement avant la suppression de l'équipement 
   public function preRemove() {
-    log::add('wallbox', 'info', 'Suppression de la Wallbox : ' . $this->getName() . ' (id:' . $this->getId() . ')');
+    log::add('monwallbox', 'info', 'Suppression de la monwallbox : ' . $this->getName() . ' (id:' . $this->getId() . ')');
   }
 
   // Fonction exécutée automatiquement après la suppression de l'équipement 
   public function postRemove() {
-    log::add('wallbox', 'debug', '******* postRemove() *******');     
+    log::add('monwallbox', 'debug', '******* postRemove() *******');     
   }
    
   // Fonction d'authentification pour obtenir le token de connexion
-  public function getWallboxToken(){         
+  public function getmonwallboxToken(){         
     // Authentification de l'application
-    $username = config::byKey("username", "wallbox");
-    $password = config::byKey("password", "wallbox");
+    $username = config::byKey("username", "monwallbox");
+    $password = config::byKey("password", "monwallbox");
 
-    log::add('wallbox', 'debug', 'getWallboxToken('.$username.')' );  
+    log::add('monwallbox', 'debug', 'getmonwallboxToken('.$username.')' );  
     $authenticationencoded = base64_encode($username.":".$password);
     
     // Requete du token
@@ -781,7 +781,7 @@ class wallbox extends eqLogic {
     $clientHTTP = json_decode($result,true);
 
     if($clientHTTP['status'] == "200"){
-      log::add('wallbox', 'info', 'Authentification SUCCES');
+      log::add('monwallbox', 'info', 'Authentification SUCCES');
       $tokenhs = $this->getCmd(null, 'tokenhs');
       if (is_object($tokenhs)) {               
         $this->checkAndUpdateCmd('tokenhs', 0);  
@@ -789,7 +789,7 @@ class wallbox extends eqLogic {
       return $clientHTTP['jwt'];
     }
     else {
-      log::add('wallbox', 'warning' ,"WallboxToken introuvable! [" . $clientHTTP . "]");      
+      log::add('monwallbox', 'warning' ,"monwallboxToken introuvable! [" . $clientHTTP . "]");      
       // ajax::error("Récupération des données impossible.");
       // throw new Exception($clientHTTP);
       $tokenhs = $this->getCmd(null, 'tokenhs');
@@ -801,10 +801,10 @@ class wallbox extends eqLogic {
     }
   }
 
-  // Fonction pour recuperer la liste des chargeurs Wallbox
+  // Fonction pour recuperer la liste des chargeurs monwallbox
   public function getChargerList(){
-    log::add('wallbox', 'debug', 'getChargerList()');
-    $token = $this->getWallboxToken();    
+    log::add('monwallbox', 'debug', 'getChargerList()');
+    $token = $this->getmonwallboxToken();    
     if($token != null) {
       $opts = array('http' =>
                       array(
@@ -820,13 +820,13 @@ class wallbox extends eqLogic {
       // On extrait la liste des chargeurs
       $chargeurs_liste = $objectresult['result']['groups'][0]['chargers'];
    
-      // log::add('wallbox', 'debug', 'Liste des chargeurs  : '. print_r($chargeurs_liste, true));      
-      log::add('wallbox', 'debug', 'Nombre de chargeurs  : '. count($chargeurs_liste));      
+      // log::add('monwallbox', 'debug', 'Liste des chargeurs  : '. print_r($chargeurs_liste, true));      
+      log::add('monwallbox', 'debug', 'Nombre de chargeurs  : '. count($chargeurs_liste));      
     }
     else {
-      log::add('wallbox', 'warning' ,"L'utilisateur n'est pas authentifié");
+      log::add('monwallbox', 'warning' ,"L'utilisateur n'est pas authentifié");
       // throw new Exception("L'utilisateur n'est pas authentifié");
-      $chargeurs_liste['ERREUR'] = 'WallboxToken introuvable';
+      $chargeurs_liste['ERREUR'] = 'monwallboxToken introuvable';
     }
     return $chargeurs_liste;
   }
@@ -834,8 +834,8 @@ class wallbox extends eqLogic {
   // Fonction pour recuperer les donnees des chargeurs
   public function getChargerStatus() {
     $chargerId = $this->getConfiguration("chargerid");
-    log::add('wallbox', 'debug', 'getChargerStatus('. $chargerId.')');
-    $token = $this->getWallboxToken();
+    log::add('monwallbox', 'debug', 'getChargerStatus('. $chargerId.')');
+    $token = $this->getmonwallboxToken();
     
     if($token != null && $chargerId != null){
       $opts = array('http' =>
@@ -853,7 +853,7 @@ class wallbox extends eqLogic {
       
       $objChargeurData = array_merge_recursive( $object_chargeur_status, $object_chargeur_data );
       
-      //log::add('wallbox', 'debug', 'objChargeurData  : '. print_r($objChargeurData, true));
+      //log::add('monwallbox', 'debug', 'objChargeurData  : '. print_r($objChargeurData, true));
       return $objChargeurData;
     }
     else{
@@ -861,9 +861,9 @@ class wallbox extends eqLogic {
       $tokenhs = $this->getCmd(null, 'tokenhs');
       if (is_object($tokenhs)) {        
         $tokenhs = $tokenhs->execCmd();          
-        log::add('wallbox', 'debug', 'Connexion au Cloudwallbox impossible : ' . $tokenhs . '/5');    
+        log::add('monwallbox', 'debug', 'Connexion au Cloudmonwallbox impossible : ' . $tokenhs . '/5');    
         if($tokenhs == 5) {
-          throw new Exception("Perte de connexion avec le CloudWallBox");
+          throw new Exception("Perte de connexion avec le Cloudmonwallbox");
         }
       }
       return '';      
@@ -874,8 +874,8 @@ class wallbox extends eqLogic {
   public function defineChargingState($resume)
   {
     $chargerId = $this->getConfiguration("chargerid");
-    log::add('wallbox', 'debug', 'DEBUT defineChargingState(' . $resume . ') : '. $chargerId);
-    $token = $this->getWallboxToken();
+    log::add('monwallbox', 'debug', 'DEBUT defineChargingState(' . $resume . ') : '. $chargerId);
+    $token = $this->getmonwallboxToken();
 
     if($token != null && $chargerId != null){
       if(!$resume)
@@ -908,7 +908,7 @@ class wallbox extends eqLogic {
       $response = curl_exec($curl);
 
       curl_close($curl);
-      log::add('wallbox', 'debug', 'FIN defineChargingState : '. $response);
+      log::add('monwallbox', 'debug', 'FIN defineChargingState : '. $response);
 
       $objectresult = json_decode($response,true);
       return $objectresult;
@@ -922,10 +922,10 @@ class wallbox extends eqLogic {
   public function defineLockState($locked = "")
   {
     $chargerId = $this->getConfiguration("chargerid");  // Chargeur a déverouiller/deverouiller
-    log::add('wallbox', 'debug', 'DEBUT defineLockState('. $locked . ') : ' . $chargerId);
+    log::add('monwallbox', 'debug', 'DEBUT defineLockState('. $locked . ') : ' . $chargerId);
     $a_status_lock= array();
     
-    $token = $this->getWallboxToken();      
+    $token = $this->getmonwallboxToken();      
     if($token != null && $chargerId != null) {
       if($locked == 1)
       {
@@ -938,7 +938,7 @@ class wallbox extends eqLogic {
         $data = ''; // Oula pas normal !
       }
       
-      log::add('wallbox', 'debug', 'defineLockState  data : '. $data);
+      log::add('monwallbox', 'debug', 'defineLockState  data : '. $data);
          
       if($data != "") {
         $curl = curl_init();
@@ -963,7 +963,7 @@ class wallbox extends eqLogic {
         $response = curl_exec($curl); // envoi la commande à l'API de la borne
         curl_close($curl);  // ferme la connexion à l'API
         
-        // log::add('wallbox', 'debug', 'response :' . $response);
+        // log::add('monwallbox', 'debug', 'response :' . $response);
         
         $responseobj = json_decode($response,true);
         
@@ -976,7 +976,7 @@ class wallbox extends eqLogic {
         $a_status_lock['TEXT'] = "inconnu";   
       }
 
-      log::add('wallbox', 'debug', 'FIN defineLockState : '. $a_status_lock['ETAT'] . ' -> ' . $a_status_lock['TEXT']);
+      log::add('monwallbox', 'debug', 'FIN defineLockState : '. $a_status_lock['ETAT'] . ' -> ' . $a_status_lock['TEXT']);
       return $a_status_lock;
     }
     else{
@@ -988,10 +988,10 @@ class wallbox extends eqLogic {
   public function defineMaxAmp($ampValueMax)
   {
     $chargerId = $this->getConfiguration("chargerid");
-    log::add('wallbox', 'debug', 'DEBUT defineMaxAmp('. $ampValueMax . ') : ' . $chargerId);   
+    log::add('monwallbox', 'debug', 'DEBUT defineMaxAmp('. $ampValueMax . ') : ' . $chargerId);   
     $a_MaxAmp= array();
     
-    $token = $this->getWallboxToken();    
+    $token = $this->getmonwallboxToken();    
     if($token != null && $chargerId != null){
       $data = '{ "maxChargingCurrent":'.$ampValueMax.'}'; // A value Max
 
@@ -1016,7 +1016,7 @@ class wallbox extends eqLogic {
 
       $response = curl_exec($curl);
       curl_close($curl);
-      // log::add('wallbox', 'debug', 'defineMaxAmp '. $response);
+      // log::add('monwallbox', 'debug', 'defineMaxAmp '. $response);
       $objresponse = json_decode($response,true);
       
       if($objresponse['error']) {
@@ -1035,7 +1035,7 @@ class wallbox extends eqLogic {
         }
       }
      
-      log::add('wallbox', 'debug', 'FIN defineMaxAmp : maxChargingCurrent = '. $a_MaxAmp['TEXT'] . ' : ' . $a_MaxAmp['ETAT']); 
+      log::add('monwallbox', 'debug', 'FIN defineMaxAmp : maxChargingCurrent = '. $a_MaxAmp['TEXT'] . ' : ' . $a_MaxAmp['ETAT']); 
       $objresponse = null;
       return $a_MaxAmp;
     }
@@ -1052,13 +1052,13 @@ class wallbox extends eqLogic {
      $dt = new DateTime($date, new DateTimeZone('UTC'));
      $dt->setTimeZone(new DateTimeZone($tm_tz_to->getName()));
      $utc_time_from =$dt->format("d-m-Y H:i:s");
-     // log::add('wallbox', 'debug', 'Conversion '.$date.' (UTC) en '.$utc_time_from . ' (' . $localtimezone . ')');
+     // log::add('monwallbox', 'debug', 'Conversion '.$date.' (UTC) en '.$utc_time_from . ' (' . $localtimezone . ')');
 
      return $utc_time_from;
   }
 
   public function toHtml($_version = 'dashboard') {  
-    log::add('wallbox', 'debug', '--DEBUT toHtml('.$this->getConfiguration('widgetTemplate').') : version=' . $_version);
+    log::add('monwallbox', 'debug', '--DEBUT toHtml('.$this->getConfiguration('widgetTemplate').') : version=' . $_version);
 
     if ($this->getIsEnable() != 1) {
       return '';
@@ -1073,16 +1073,16 @@ class wallbox extends eqLogic {
     }
     $version = jeedom::versionAlias($_version);
     
-    /******* Widget Wallbox *******/
+    /******* Widget monwallbox *******/
     if ($this->getConfiguration('widgetTemplate') != 1) {
       // Affiche la tuile Jeedom
       $replace['#width#'] = $this->getDisplay('width');
       $replace['#height#'] = $this->getDisplay('height');
-      log::add('wallbox', 'debug', '--FIN toHtml : core');
+      log::add('monwallbox', 'debug', '--FIN toHtml : core');
       return parent::toHtml($_version);
     } 
     
-    /******* Affcihe le widget Wallbox *******/
+    /******* Affcihe le widget monwallbox *******/
     // Template DASHBOARD
     if($version == 'dashboard') {
       $replace['#width#'] = '640px';
@@ -1133,7 +1133,7 @@ class wallbox extends eqLogic {
     $chargingtime = $this->getCmd(null, 'chargingtime');
     // $replace['#valeur_chargingtime#'] = is_object($chargingtime) ? $chargingtime->execCmd() : 'Introuvable';
     $cr_chargingtime = is_object($chargingtime) ? $chargingtime->execCmd() : 'Introuvable'; 
-    // log::add('wallbox', 'debug', 'cr_chargingtime : ' . $cr_chargingtime);
+    // log::add('monwallbox', 'debug', 'cr_chargingtime : ' . $cr_chargingtime);
     if ($cr_chargingtime == '' || $cr_chargingtime == 'Introuvable') {
       $replace['#valeur_chargingtime#'] = "00:00:00";        
     }
@@ -1194,10 +1194,10 @@ class wallbox extends eqLogic {
     
 
     // Mise à jour du widget
-    $html = template_replace($replace, getTemplate('core', $version, 'wallbox.template', __CLASS__));
-    cache::set('wallboxWidgetdashboard' . $_version . $this->getId(), $html, 0);
+    $html = template_replace($replace, getTemplate('core', $version, 'monwallbox.template', __CLASS__));
+    cache::set('monwallboxWidgetdashboard' . $_version . $this->getId(), $html, 0);
 
-    log::add('wallbox', 'debug', '--FIN toHtml()');
+    log::add('monwallbox', 'debug', '--FIN toHtml()');
     return $html;
   }
      
@@ -1239,7 +1239,7 @@ class wallbox extends eqLogic {
    /*     * **********************Getteur Setteur*************************** */
 }
 
-class wallboxCmd extends cmd {
+class monwallboxCmd extends cmd {
    /*     * *************************Attributs****************************** */
    
    /*
@@ -1260,11 +1260,11 @@ class wallboxCmd extends cmd {
     
   // Exécution d'une commande sur un équipement
    public function execute($_options = null) {
-      log::add('wallbox', 'info', '***** DEBUT execute(' . $this->getLogicalId() . ') *****');  
+      log::add('monwallbox', 'info', '***** DEBUT execute(' . $this->getLogicalId() . ') *****');  
 
       $eqlogic = $this->getEqLogic(); //récupère l'éqlogic de la commande $this
-      // log::add('wallbox', 'debug', ' *** eqlogic  *** : ' . print_r($eqlogic, true));  
-      // log::add('wallbox', 'debug', ' *** CLASS  *** : ' . __CLASS__);  // => wallboxCmd
+      // log::add('monwallbox', 'debug', ' *** eqlogic  *** : ' . print_r($eqlogic, true));  
+      // log::add('monwallbox', 'debug', ' *** CLASS  *** : ' . __CLASS__);  // => monwallboxCmd
 
       switch ($this->getLogicalId()) {
         case 'refresh':
@@ -1275,7 +1275,7 @@ class wallboxCmd extends cmd {
             //DEBUG Force la valeur de l'info totalcout
             // $eqlogic->checkAndUpdateCmd('totalcout', '15.24'); // Coût énergétique total          
             
-            log::add('wallbox', 'debug', 'chargerid : [' . $eqlogic->getConfiguration('chargerid') . ']'); 
+            log::add('monwallbox', 'debug', 'chargerid : [' . $eqlogic->getConfiguration('chargerid') . ']'); 
            
             // Mise à jour des commandes
             $eqlogic->checkAndUpdateCmd('name', $info['name']); // Nom de la borne
@@ -1285,17 +1285,17 @@ class wallboxCmd extends cmd {
             $eqlogic->checkAndUpdateCmd('signalwifi', $info['data']['chargerData']['wifiSignal']); // Force du signal wifi (int)            
 
             // Mise à jour de la configuration de l'equipement
-            // Enregistre le numero de serie, le type et le model de la Wallbox
+            // Enregistre le numero de serie, le type et le model de la monwallbox
             if(! $eqlogic->getConfiguration('chargerid')) {                    
               $eqlogic->setConfiguration('chargerid', $info['config_data']['charger_id']);  // SN
               // $eqlogic->setConfiguration('img_chargeur', $info['config_data']['image']);  // Image de la box
               $save++;
             }
 
-            // Enregistre le type et le model de la Wallbox
+            // Enregistre le type et le model de la monwallbox
             if(! $eqlogic->getConfiguration('chargertype')) {                    
-              $eqlogic->setConfiguration('chargertype', $info['data']['chargerData']['chargerType']);  // Modele de la Wallbox
-              $eqlogic->setConfiguration('part_number', $info['config_data']['part_number']);  // Reference technique de la wallbox  => PLP1-M-2-4-9-001-F
+              $eqlogic->setConfiguration('chargertype', $info['data']['chargerData']['chargerType']);  // Modele de la monwallbox
+              $eqlogic->setConfiguration('part_number', $info['config_data']['part_number']);  // Reference technique de la monwallbox  => PLP1-M-2-4-9-001-F
               $save++;
             }
 
@@ -1325,7 +1325,7 @@ class wallboxCmd extends cmd {
 
             // Enregistre les infos dans Jeedom
             if($save > 0) { 
-              log::add('wallbox', 'info', 'Enregistrement configuration : ' . $info['name']);
+              log::add('monwallbox', 'info', 'Enregistrement configuration : ' . $info['name']);
               $eqlogic->save(); 
             }
 
@@ -1334,7 +1334,7 @@ class wallboxCmd extends cmd {
             $eqlogic->checkAndUpdateCmd('status', $status['TEXT']); // (str)
             $eqlogic->checkAndUpdateCmd('statusid', $status['STATUS_ID']);  // (int)
             
-            log::add('wallbox', 'debug', 'status[' . $info['status_id'] . '] = ' . $status['ETAT'] . ' / chargecontrol-icon: ' . $status['ICON'] . ' / text: ' . $status['TEXT'] );
+            log::add('monwallbox', 'debug', 'status[' . $info['status_id'] . '] = ' . $status['ETAT'] . ' / chargecontrol-icon: ' . $status['ICON'] . ' / text: ' . $status['TEXT'] );
             
             $eqlogic->checkAndUpdateCmd('power', $info['charging_power']);  // kW en temps reel (int)
 
@@ -1435,16 +1435,16 @@ class wallboxCmd extends cmd {
             if(is_object($lockcontrol)) {            
               if ($info['config_data']['locked'] == 1) {
                 $lockcontrol->setDisplay('icon', '<i class="fa fa-lock"></i>');
-                log::add('wallbox', 'debug', 'état de la borne = Verrouiller' );
+                log::add('monwallbox', 'debug', 'état de la borne = Verrouiller' );
               }
               elseif ( $status['TEXT'] === "Attente authentification" ) {
                 $lockcontrol->setDisplay('icon', '<i class="fa fa-lock"></i>');
-                log::add('wallbox', 'debug', 'état de la borne = Attente authentification' );
+                log::add('monwallbox', 'debug', 'état de la borne = Attente authentification' );
               }
               else 
               {
                 $lockcontrol->setDisplay('icon', '<i class="fa fa-lock-open"></i>');
-                log::add('wallbox', 'debug', 'état de la borne = Déverrouiller' );
+                log::add('monwallbox', 'debug', 'état de la borne = Déverrouiller' );
               }        
               $lockcontrol->save();
             }
@@ -1465,11 +1465,11 @@ class wallboxCmd extends cmd {
             if($info['data']['chargerData']['resume']['totalSessions'] == 1) {
               $energypricetotal = is_object($energypricetotal) ? $energypricetotal->execCmd() : 0; 
               if($energypricetotal != $totalcout) {
-                log::add('wallbox', 'debug', 'Nouveau mois, init le cout avec la 1ere charge');
+                log::add('monwallbox', 'debug', 'Nouveau mois, init le cout avec la 1ere charge');
                 $eqlogic->checkAndUpdateCmd('totalcout', $energypricetotal); // Coût énergétique total (double)
               }
               else {
-                log::add('wallbox', 'debug', 'totalcout deja init : ' . $energypricetotal);
+                log::add('monwallbox', 'debug', 'totalcout deja init : ' . $energypricetotal);
               }
             }
             
@@ -1477,30 +1477,30 @@ class wallboxCmd extends cmd {
               // Une session de charge vient de finir, on ajout le cout de la charge a celle du mois en cours
               $energypricetotal = is_object($energypricetotal) ? $energypricetotal->execCmd() : 0; 
               $eqlogic->checkAndUpdateCmd('totalcout', $energypricetotal + $totalcout); // Coût énergétique total (double)
-              log::add('wallbox', 'debug', 'totalcout fin session : ' . $totalcout . '+' . $energypricetotal . '=' . ($energypricetotal + $totalcout));
+              log::add('monwallbox', 'debug', 'totalcout fin session : ' . $totalcout . '+' . $energypricetotal . '=' . ($energypricetotal + $totalcout));
             }
             else {
-              log::add('wallbox', 'debug', 'totalcout (info) : ' . $totalcout);
+              log::add('monwallbox', 'debug', 'totalcout (info) : ' . $totalcout);
             }
             $eqlogic->checkAndUpdateCmd('totalsessions', $info['data']['chargerData']['resume']['totalSessions']); // Nombre de recharge (int)
             
             // $eqlogic->checkAndUpdateCmd('totalcout', '11.09'); // Total au mois
             
-            log::add('wallbox','debug','reglage puissance: '.$maxAparphase . '/' . $info['max_available_power'] . ' A');
-            log::add('wallbox','debug','chargerType: ' . $eqlogic->getConfiguration('chargertype'));
-            log::add('wallbox','debug','charging_time: ' . $this->secToHHMMSS($info['charging_time']) . ' => ' . $info['charging_time'] . 's');
-            log::add('wallbox','debug','total Sessions: ' . $info['data']['chargerData']['resume']['totalSessions']);
-            log::add('wallbox','debug','total chargingTime: ' . $this->secToHHMMSS($info['data']['chargerData']['resume']['chargingTime']));
-            log::add('wallbox','debug','total energy: ' . $info['data']['chargerData']['resume']['totalEnergy']);
-            log::add('wallbox','debug','total cout: ' . $totalcout);
-            log::add('wallbox','debug','Coût énergétique: '. $info['config_data']['energy_price'] . ' * ' . $info['added_energy'] . ' = ' . ($info['config_data']['energy_price'] * $info['added_energy']));         
+            log::add('monwallbox','debug','reglage puissance: '.$maxAparphase . '/' . $info['max_available_power'] . ' A');
+            log::add('monwallbox','debug','chargerType: ' . $eqlogic->getConfiguration('chargertype'));
+            log::add('monwallbox','debug','charging_time: ' . $this->secToHHMMSS($info['charging_time']) . ' => ' . $info['charging_time'] . 's');
+            log::add('monwallbox','debug','total Sessions: ' . $info['data']['chargerData']['resume']['totalSessions']);
+            log::add('monwallbox','debug','total chargingTime: ' . $this->secToHHMMSS($info['data']['chargerData']['resume']['chargingTime']));
+            log::add('monwallbox','debug','total energy: ' . $info['data']['chargerData']['resume']['totalEnergy']);
+            log::add('monwallbox','debug','total cout: ' . $totalcout);
+            log::add('monwallbox','debug','Coût énergétique: '. $info['config_data']['energy_price'] . ' * ' . $info['added_energy'] . ' = ' . ($info['config_data']['energy_price'] * $info['added_energy']));         
 
             // Mise à jour des templates
             $eqlogic->emptyCacheWidget();
-            // $cache = cache::byKey('wallboxWidgetmobile' . $eqlogic->getId());
+            // $cache = cache::byKey('monwallboxWidgetmobile' . $eqlogic->getId());
             // $cache->remove();
-            $cache_wallboxWidgetdashboard = cache::byKey('wallboxWidgetdashboard' . $eqlogic->getId());
-            $cache_wallboxWidgetdashboard->remove();
+            $cache_monwallboxWidgetdashboard = cache::byKey('monwallboxWidgetdashboard' . $eqlogic->getId());
+            $cache_monwallboxWidgetdashboard->remove();
             // $eqlogic->toHtml('mobile');
             // $eqlogic->toHtml('dashboard');
             
@@ -1519,7 +1519,7 @@ class wallboxCmd extends cmd {
           $info = $this->getEqLogic()->getChargerStatus();
           $statusid = $info['status_id'];
           $cr_chargecontrol = '';
-          log::add('wallbox', 'debug', 'statusid: ' . $statusid);
+          log::add('monwallbox', 'debug', 'statusid: ' . $statusid);
 
           if($statusid == 194)
           {
@@ -1532,9 +1532,9 @@ class wallboxCmd extends cmd {
             $cr_chargecontrol = $this->getEqLogic()->defineChargingState(true);
           }
           else {
-            log::add('wallbox', 'debug', '  chargecontrol inconnue : ' . $statusid);
+            log::add('monwallbox', 'debug', '  chargecontrol inconnue : ' . $statusid);
           }
-          log::add('wallbox', 'debug', '  cr_chargecontrol : ' .  print_r($cr_chargecontrol, true));
+          log::add('monwallbox', 'debug', '  cr_chargecontrol : ' .  print_r($cr_chargecontrol, true));
           break;
 
         case 'lockcontrol' :        
@@ -1554,24 +1554,24 @@ class wallboxCmd extends cmd {
             $icon = 'fa-lock';
           }
           else {
-            log::add('wallbox', 'warning', '***** Vérouillage actuel inconnu [' . $status_locked . ']');
+            log::add('monwallbox', 'warning', '***** Vérouillage actuel inconnu [' . $status_locked . ']');
           }
 
           if($log_trace != "" && $status_locked !== "" && $icon != "") {   
             // On execute la commande sur la borne
-            log::add('wallbox', 'debug', 'status_locked : ' . $status_locked);             
+            log::add('monwallbox', 'debug', 'status_locked : ' . $status_locked);             
             
             $status_locked = $this->getEqLogic()->defineLockState($status_locked);
             if(($status_locked['ETAT'] == "0") || ($status_locked['ETAT'] == "1")) {
               // On affiche l'etat actuel de la borne
-              log::add('wallbox', 'debug', $log_trace . 'OK'); 
+              log::add('monwallbox', 'debug', $log_trace . 'OK'); 
 
               // Actualise l'icone de la commande d'état de la borne : Verrouiller / Déverrouiller
               $lockcontrol = $this->getEqLogic()->getCmd(null, 'lockcontrol');
               $lockcontrol->setDisplay('icon', '<i class="fa ' . $icon . '"></i>');            
               $lockcontrol->save();
 
-              // log::add('wallbox', 'debug', 'lockcontrol() FORCE REFRESH'); 
+              // log::add('monwallbox', 'debug', 'lockcontrol() FORCE REFRESH'); 
               // $refresh = $eqlogic->getCmd(null, 'refresh');  // on met à jour les infos
               // if(is_object($refresh)) {
                 // $refresh->execCmd();
@@ -1579,25 +1579,25 @@ class wallboxCmd extends cmd {
               // }
             }
             else {
-              log::add('wallbox', 'warning', 'Etat du vérrouillage : ' . $status_locked['ETAT'] . ' -> ' . $status_locked['TEXT']);                   
+              log::add('monwallbox', 'warning', 'Etat du vérrouillage : ' . $status_locked['ETAT'] . ' -> ' . $status_locked['TEXT']);                   
             }
           }
           else {
-            log::add('wallbox', 'debug', 'Commande non envoyée[' . $status_locked . '] -> log_trace:' . $log_trace . " / status_locked:" . $status_locked . " / icon:" . $icon );   
+            log::add('monwallbox', 'debug', 'Commande non envoyée[' . $status_locked . '] -> log_trace:' . $log_trace . " / status_locked:" . $status_locked . " / icon:" . $icon );   
             throw new Exception($log_trace . 'ECHEC');
           }
           break;
 
         case 'maxpower' :
           $valPuissanceMaxUser = $_options['slider'];
-          log::add('wallbox', 'info', 'Réglage puissance max : ' . $valPuissanceMaxUser . 'A');
+          log::add('monwallbox', 'info', 'Réglage puissance max : ' . $valPuissanceMaxUser . 'A');
           if ($valPuissanceMaxUser >= 6) {
             $status_MaxAuser = $this->getEqLogic()->defineMaxAmp($valPuissanceMaxUser);
             if($status_MaxAuser['ETAT'] == "SUCCES") {
               $eqlogic->checkAndUpdateCmd('valmaxpower', $valPuissanceMaxUser);   // Max A par phase
             }
             else {
-              log::add('wallbox', 'warning', 'Réglage puissance max : ' . $status_MaxAuser['ETAT'] . ' -> ' . $status_MaxAuser['TEXT']);                   
+              log::add('monwallbox', 'warning', 'Réglage puissance max : ' . $status_MaxAuser['ETAT'] . ' -> ' . $status_MaxAuser['TEXT']);                   
             }
           }
           else {
@@ -1606,9 +1606,9 @@ class wallboxCmd extends cmd {
           break;
         
         default:
-          log::add('wallbox', 'warning', '***** commande inconnue : '.$this->getLogicalId() . ') *****');  
+          log::add('monwallbox', 'warning', '***** commande inconnue : '.$this->getLogicalId() . ') *****');  
       }
-      log::add('wallbox', 'info', '***** FIN execute(' . $this->getLogicalId() . ') *****');        
+      log::add('monwallbox', 'info', '***** FIN execute(' . $this->getLogicalId() . ') *****');        
   }
 
 
