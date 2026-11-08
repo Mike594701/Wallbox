@@ -1,0 +1,453 @@
+
+/* Widget WallBox */
+#widgetWallbox {
+  background-color: #ffffff;
+  height: 403px;
+  border: 1px solid #4a7190;  
+}
+
+.debug > div {
+  border: 1px dashed rgb(79,185,227); 
+}
+
+/* variablesJS pour le script mis à jour par la commande refresh */
+#variablesJS {
+  position: absolute;
+  z-index: 10000;
+  background-color: red;
+  color: #ffffff;
+}
+
+/* Barre du widget */
+.TitleBar {
+  background-color: #F7F7F7;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  border: 1px solid #4a7190;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#wifi {
+  float: left;
+  margin-left: 10px;
+  color: #4c4c4c;
+}
+
+#wifi > i {
+  font-size: 1.3em;
+}
+
+.WallBoxName {
+  font-size: 1.3em;
+  color: #817e7e;
+  /* text-shadow: 0 1px 1px #ffffff; */
+  font-weight: bold;
+  position: relative;
+  left: 6px;
+}
+
+.RefreshButton {
+  float: right;
+  background-color: #000000;
+  border-color: #545454;
+  color: #ffffff !important;
+  width: 90px;
+  height: 31px;
+  line-height: 31px;
+  margin-right: 4px !important;
+  margin-top: 4px !important;
+  border-radius: 16px;
+  font-size: 1em;
+}
+
+.RefreshButton:hover {
+  cursor: pointer;
+  /* text-shadow: 2px 2px 2px #16ff00 !important; */
+  color: #a5a5a5 !important;
+}
+
+.TitleBar #model_borne {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #4c4c4c !important;
+  padding-left: 7px;
+}
+
+.TitleBar a {
+  color: #4c4c4c !important;
+}
+
+.TitleBar a:hover {
+  color: #a5a5a5 !important;
+}
+
+
+
+/* Les commandes sont dans des icons cercle avec zoom au survol */
+i.cercle {
+  display: inline-block;
+  border-radius: 60px;
+  box-shadow: 0 0 2px #888;
+  padding: 0.6em 0.6em;
+  color: white;
+}
+
+.lockUnlockButton:hover,
+.chargePauseButton:hover {
+  border: none;
+  transform: scale(1.2);
+  transition: 0.1s;
+  cursor: pointer;  
+}
+
+
+
+/* Slider pour gerer la puissance de la borne */
+.wallbox {
+  position: absolute;
+  width: 240px;
+  height: 225px;  
+  border-radius: 2px;
+  /* box-shadow: 0.5rem 1rem 1rem 0 rgba(0, 0, 0, 0.6); */
+  overflow: hidden;
+  font-family: "Rubik", Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #201c29;
+}
+
+.reglage {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: #F2F2F2;
+  border-radius: 50%;
+  box-shadow: 0px 0px 1rem rgba(0, 0, 0, 0.8);
+}
+
+.reglage .control {
+  position: absolute;
+  z-index: 5;
+  width: 130px;
+  height: 130px;
+  top: 25%;
+  left: 35px;
+  background: #E6E6E6;
+  border-radius: 50%;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.7);
+}
+
+.reglage .control .valeur_temps_reel {
+  position: absolute;
+  top: 25px;
+  left: 6px;
+  right: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.reglage .control .symbol_ampere {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  letter-spacing: -8px;
+}
+
+.reglage .control .symbol_ampere span {
+  position: absolute;
+  right: 37px;
+  font-size: 2rem;
+  line-height: 34px;
+  padding: 3px 0 0 7px;
+}
+
+.status_borne {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+}
+.status_borne_2lignes {
+  line-height: 1;
+  bottom: 16px;  
+}
+
+.reglage .ring {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: 10px;
+  left: 10px;
+  background-image: linear-gradient(to right, #c7c7c7, #b2b2b2, #9c9c9c, #888888, #747474);
+  border-radius: 50%;
+  box-shadow: inset 2px 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+.reglage .ring .bottom_overlay {
+  position: absolute;
+  width: 95px;
+  height: 95px;
+  top: 50%;
+  left: 50%;
+  background: #F2F2F2;
+  transform-origin: 0 0;
+  transform: rotate(45deg);
+  border-radius: 0 0 95px 0;
+}
+
+#slider {
+  position: absolute;
+  top: 55px;
+  left: 38px;
+  z-index: 1000;
+}
+
+#slider .rs-border {
+  border-color: transparent;
+}
+
+.rs-control .rs-range-color, .rs-control .rs-path-color, .rs-control .rs-bg-color {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.rs-control .rs-handle {
+  background-color: rgba(82, 44, 109, 0.8);
+  cursor: grabbing;
+}
+
+.rs-tooltip.edit, .rs-tooltip .rs-input, .rs-tooltip-text {
+  font-family: rubik, helvetica, sans-serif;
+  font-size: 3.3rem;
+  background: transparent;
+  font-weight: 700;
+  top: 65%;
+  height: 3.9rem;
+  padding: 0 !important;
+  width: 4.5rem;
+}
+
+#slider .rs-handle-dot:hover {
+  border: none;
+  transform: scale(1.2);
+  transition: 0.1s;
+}
+
+#slider .rs-transition {
+  transition-timing-function: cubic-bezier(1, -0.53, 0.405, 1.425);
+}
+
+/* Grid pour afficher le slider et les infos de la borne */
+.wallbox_row {
+  position: absolute;
+  left: 10px;
+  display: grid;
+  grid-template-columns: 240px 404px;
+}
+
+.wallbox_row #info_chargingtime, 
+.wallbox_row #info_energyconsumed, 
+.wallbox_row #info_energypricetotal {
+  font-size: 1em;
+  color: #4c4c4c !important;
+  padding-left: 15px;
+}
+
+.wallbox_row #info_chargingtime > span,
+.wallbox_row #info_energyconsumed > span,
+.wallbox_row #info_energypricetotal > span {
+  font-weight: bold;
+}
+
+/* Grid pour afficher les commandes */
+.wallbox_row-2 {
+  top: 266px;
+  position: absolute;
+  left: 10px;
+  display: grid;
+  grid-template-columns: 120px 120px;
+  border-radius: 5px;
+  border: 1px solid rgb(221 221 221);   
+}
+
+/* Grid pour afficher les stats et variables JS */
+.wallbox_row-3 {
+  top: 325px;
+  position: absolute;
+  background-color: #ffffff;
+  left: 14px;
+  margin-top: 10px;  
+  width: 612px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 25% 25% 25% 25%; /* Nombre de variables */
+}
+
+.wallbox_row .wallbox {
+  background-color: #ffffff;
+}
+
+.wallbox_row > div,
+.wallbox_row-2 > div {
+  padding: 10px;  
+}
+
+.wallbox_row-2 > div > label {
+  margin-bottom: 0px;
+}
+
+.wallbox_row-3 > div {
+  height: 100px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  border: 1px solid rgb(221 221 221);  
+  color: #4c4c4c;  
+}
+
+.wallbox_row-3 > div > span {
+  font-size: 2rem;  
+  font-weight: bold;
+}
+
+/* Classes simples */
+.fas {
+  -webkit-animation: pulse 1s infinite;
+          animation: pulse 1s infinite;
+}
+
+@-webkit-keyframes pulse {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.txt-color-vert {
+  color: #5cc0a6;
+}
+
+.txt-color-jaune {
+  color: #ffe000;
+}
+
+.txt-color-orange {
+  color: #c37d28;
+}
+
+.txt-color-red {
+  color: #ff0000;
+}
+
+.color_orange,
+.color-verrouille {
+  background-color: #feb700;
+}
+
+.color-gris-clair {
+  background-color: #dfdfdf;
+}
+
+.color-verte {
+  background-color: #52b89e;
+}
+
+.color-vert-fonce {
+  background-color: #4caf50;
+}
+
+.color-bleu,
+.color-charge {
+  background-color: #384bff;
+}
+
+.color-bleu-clair {
+  background-color: #0ca7d6;
+}
+
+.rs-handle-dot:after {
+  background-color: #ffffff;
+}
+
+
+/* Etat actuel de la borne avec son liseret de charge */
+#info_status_borne {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #1f1f1f !important;  
+}
+
+#info_status_borne_action {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #7a7a7a !important;  
+}
+
+
+/* Charge animation */
+.WallBox-bar-status {
+  height: 3px;
+  background: #d3d3d3;  /* Gris */
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.WallBox-bar-status span{
+  width: 100%;
+}
+
+.WallBox-bar-status span:nth-child(1)
+{
+  transform:rotate(0deg);
+}
+
+.WallBox-bar-status span:before
+{
+  content: '';
+  position: absolute;
+  width:100%;
+  height: 3px;
+  background: #a9b1ff;
+  animation: animate 10s cubic-bezier(0, 0.4, 1, 0.65) infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform:scaleX(0);
+    transform-origin: left;
+  }
+  50%
+  {
+    transform:scaleX(1);
+    transform-origin: left;
+  }
+  50.1%
+  {
+    transform:scaleX(1);
+    transform-origin: right;    
+  }
+  
+  100%
+  {
+    transform:scaleX(0);
+    transform-origin: right;    
+  }
+} 
+

@@ -1,0 +1,167 @@
+<div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #eqLogic_class# #class#" data-eqType="#eqType#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="dashboard" style="width: #width#;height: #height#;#style#">
+  <link rel="stylesheet" href="plugins/mywallbox/core/template/css/roundslider.min.css"/>
+  <link rel="stylesheet" href="plugins/mywallbox/core/template/css/style.css"/>
+  <!-- Barre de titre -->
+  <div class="TitleBar">
+    <span id="wifi"><i id="icon_wifi" class="fas fa-wifi"></i> #valeur_signalwifi#%</span>
+    <span id="new_firmware" class="hidden"><i class="fas fa-download txt-color-orange"></i></span>
+    <label class="RefreshButton refresh" data-cmd_id="#refresh#">#refresh_titre_bouton# <i id="icon_sync_refresh" class="fa fa-sync-alt"></i></label>
+    <a class="WallBoxName" href="#eqLink#">#name_display#</a><span id="model_borne"> - #model_borne#</sapn>
+  </div>
+  
+  <!-- Widget Wallbox -->
+  <div id="widgetWallbox">    
+    <div class="wallbox_row">
+      <!-- Panel gauche (widget graphique) -->
+      <div class="wallbox">
+        <div id="slider" class="rslider"></div>
+        <div class="reglage">
+          <div class="ring">
+            <div class="bottom_overlay"></div>
+          </div>
+          <div class="control">
+            <div id="valeur_temps_reel" class="valeur_temps_reel">#valeur_temps_reel#</div>
+            <div class="symbol_ampere"><span>A</span></div>
+            <div id="status_borne_txt" class="status_borne">#status_borne#</div>
+          </div>
+        </div>
+      </div>
+      <div></div>
+      <!-- Panel droite (informations et état de la borne) -->      
+      <div id="info_status_borne">#status_borne#
+        <div id="info_status_borne_action"></div>
+        <div class="WallBox-bar-status">      
+          <span id="anim-WallBox-bar-status"></span>
+        </div>
+      </div>
+      <div></div>
+      <div id="info_chargingtime">Durée <span id="valeur_chargingtime_tps_reel">#valeur_chargingtime#</span></div><div></div>
+      <div id="info_energyconsumed">Énergie consommée <span>#valeur_energyconsumed#</span></div><div></div>
+      <div id="info_energypricetotal">Coût énergétique <span>#valeur_energypricetotal#</span></div><div></div>
+      <!-- <div></div><div></div> -->
+    </div>  
+
+    <!-- Boutons de commande -->      
+    <div class="wallbox_row-2">
+      <div class="txt-center">
+        <label class="chargePauseButton chargecontrol" data-cmd_id="#chargecontrol#"><i class="fa fa-question cercle"></i></label>
+      </div>
+      <div class="txt-center">
+        <label class="lockUnlockButton lockcontrol" data-cmd_id="#lockcontrol#"><i class="fa fa-question cercle"></i></label>
+      </div>
+   </div>    
+
+    <!-- Historique des charges (mois en cours) -->      
+    <div class="wallbox_row-3">
+      <div id="valeur_totalsessions">Nombre de charge <br><span>#valeur_totalsessions#</span></div>
+      <div id="valeur_totalcharge">Temps de charge <br><span>#valeur_totalcharge#</span></div>
+      <div id="valeur_totalpuissance">Énergie consommée <br><span>#valeur_totalpuissance#</span></div>
+      <div id="valeur_totalcout">Coût énergétique <br><span>#valeur_totalcout#</span></div>
+    </div>
+    
+    <!-- valeurs pour les variables JS -->
+    <div id="variablesJS" class="hidden">
+      <div id="max_value_ampere_user" class="">#max_value_ampere_user#</div>
+      <div id="max_value_ampere" class="">#max_value_ampere#</div>
+      <div id="valeur_statusid" class="">#valeur_statusid#</div>      
+      <div id="valeur_verrouillage" class="">#valeur_verrouillage#</div>      
+      <div id="valeur_new_firmware" class="">#valeur_new_firmware#</div>      
+      <!--<div id="valeur_chargingtime" class="">#valeur_chargingtime#</div>-->
+    </div>
+  <script src='plugins/mywallbox/core/template/js/roundslider.min.js'></script>
+  <script src="plugins/mywallbox/core/template/js/script.js"></script>
+  
+  <script>
+  
+    var new_update_refresh = 15;  // Prochain update dans 15s 
+  
+    /* Click sur Refresh button */
+    $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
+      //console.info('REFRESH #refresh#');
+      // On fait tourner l'icone du refresh
+      $('.eqLogic[data-eqLogic_uid=#uid#] #icon_sync_refresh').addClass('fa-spin');
+      jeedom.cmd.execute({id: '#refresh#'});
+    });    
+    
+    /* Click sur lockcontrol button */
+    // l'API est tres longue a retourner le status, on programme du coup un REFRESH
+    $('.eqLogic[data-eqLogic_uid=#uid#] .lockcontrol').on('click', function () {
+      // console.info('LOCK/UNLOCK #lockcontrol#');
+      
+      if (! $('.eqLogic[data-eqLogic_uid=#uid#] #icon_sync_refresh').hasClass('fa-spin')) {       
+        var now = new Date();      
+        var heure   = now.getHours();
+        var minute  = now.getMinutes();
+        var seconde = now.getSeconds();      
+        
+        // On fait tourner l'icone du refresh pour montrer que la commande est partie
+        $('.eqLogic[data-eqLogic_uid=#uid#] #icon_sync_refresh').addClass('fa-spin');  
+        
+        // On gris l'icone pour montrer la prise en compte
+        document.getElementsByClassName('lockUnlockButton')[0].innerHTML = '<i class="fa fa-sync-alt fa-spin cercle color-gris-clair"></i></label>';   
+        
+        // Lance la commande LOCK/UNLOCK
+        jeedom.cmd.execute({id: '#lockcontrol#'});
+        
+        // Dans 15, on lance un refresh
+        setTimeout( function() 
+        {
+          now = new Date();
+          heure   = now.getHours();
+          minute  = now.getMinutes();
+          seconde = now.getSeconds();         
+          
+          // La commande de verrou sur la borne est tres lente
+          // console.info('REFRESH AUTO : ' + heure + 'h' + minute + '.' + seconde);
+          $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').trigger('click');
+        }, new_update_refresh * 1000);
+        
+        // console.info('Programme cmd REFRESH : ' + heure + 'h' + minute + '.' + seconde + ' + 15s');
+      }
+    });   
+    
+    /* chargecontrol button */
+    $('.eqLogic[data-eqLogic_uid=#uid#] .chargecontrol').on('click', function () {
+      //console.info('CHARGE/PAUSE : #chargecontrol#');
+      jeedom.cmd.execute({id: '#chargecontrol#'});
+      setTimeout( function() 
+      {
+        $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').trigger('click');
+      }, new_update_refresh * 1000);      
+    });
+    
+    /* modification ampere MAX */
+    $('.eqLogic[data-eqLogic_uid=#uid#] #slider').on('change', function (e) {
+      //console.info('MODIF A MAX #maxpower# => ' + e.value + 'A');
+      jeedom.cmd.execute({id: '#maxpower#', value: {slider: e.value}});
+    });    
+    
+    // Couleur sur l'icone Wifi
+    if (#valeur_signalwifi# == 100) {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #icon_wifi').addClass('txt-color-vert');
+    }
+    else if (#valeur_signalwifi# == 75) {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #icon_wifi').addClass('txt-color-jaune');
+    }
+    else if (#valeur_signalwifi# == 50) {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #icon_wifi').addClass('txt-color-orange');
+    }
+    else {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #icon_wifi').addClass('txt-color-red');
+    }
+    
+    /* Ecrit le status_borne sur 2 lignes si besoin */
+    console.info('taille status_borne(#status_borne#) => ' + ("#status_borne#").length);
+    if ( ("#status_borne#").length > 10) {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #status_borne_txt').addClass('status_borne_2lignes');
+      // Si le status est trop grand on le tronque
+      if ( ("#status_borne#").length > 15) {        
+        $('.eqLogic[data-eqLogic_uid=#uid#] #status_borne_txt').text(("#status_borne#").substr(0,15) + ".");
+      }
+    }
+    else {
+      $('.eqLogic[data-eqLogic_uid=#uid#] #status_borne_txt').removeClass('status_borne_2lignes');    
+    }
+
+  </script>
+</div>
